@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Form from '../src/components/Form';
+import CardMedical from './components/CardMedical';
+import Button from '@mui/material/Button';
+import ModalComponent from './components/ModalComponent';
+import Modal from 'react-modal';
+import './App.css';
+// Define el elemento principal de la aplicación para accesibilidad
+Modal.setAppElement('#root');
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [useshowForm, setShowForm] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectMedically, setSelectMedically] = useState({});
+
+  const showModalForm = () => {
+    setShowForm(!useshowForm);
+  };
+
+  const openModal = (medically) => {
+    setSelectMedically(medically);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectMedically({});
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='flex   justify-center  ' id='root'>
+
+      <div className='fixed z-10 top-52 left-10'>
+        {!useshowForm ?
+          <Button onClick={showModalForm} variant="contained">search medically</Button>
+          :
+          <Form showModalForm={showModalForm} />
+        }
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+
+      <div className='w-5/5 container'>
+
+        <CardMedical openModal={openModal} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <ModalComponent
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        selectMedically={selectMedically}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
